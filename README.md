@@ -25,11 +25,11 @@
 ## Without schema
 
 ````bash
-echo 08ffff01100840f7d438 | xxd -r -p | bin/pb-inspector -
+echo 08ffff01100840f7d438 | xxd -r -p | pb-inspector -
 ````
 
 ## With schema
 
 ````bash
-bin/pb-inspector --file-type hex  --pb-file proto/test/v1/test.proto  fixtures/test1.hex "test.v1" "Test"
+pb-inspector --file-type hex  --pb-file proto/test/v1/test.proto  fixtures/test1.hex "test.v1" "Test"
 ````
