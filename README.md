@@ -7,17 +7,18 @@
    <a href="https://ci.appveyor.com/project/detailyang/pb-inspector-go"><img src="https://ci.appveyor.com/api/projects/status/r4w4w09rwc4rpfwj?svg=true" /></a>
    <br />
    <b>"pb-inspector-go" inpsects the protobuf binary file to debug with or without schema</b>
-   <p>many thanks to <a href="https://github.com/emicklei">emicklei</a> who writes the protobuf go parser</p>
 
    <img src="fixtures/carbon.png" />
+   <blockquote>many thanks to <a href="https://github.com/emicklei">emicklei</a> who writes the protobuf go parser</blockquote>
 </p>
 
 # Install
 
 * from github:
-    go get github.com/detailyang/protobuf-insepctor-go/cmd
+    > go get github.com/detailyang/protobuf-insepctor-go/cmd
+
 * from source:
-    make build
+    > make build
 
 # Usage
 
