@@ -19,7 +19,8 @@ install:
   - go env
 
 build_script:
-  - go test -benchmem -run="" ./... -bench ^Benchmark
+  - go test -race -v ./...
+  - go build -v -o bin/pb-inspector cmd/*.go
 
 # to disable automatic tests
 test: true

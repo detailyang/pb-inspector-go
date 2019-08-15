@@ -20,3 +20,4 @@ notifications:
 script:
   - export GO111MODULE=on
   - make test
+  - make build
