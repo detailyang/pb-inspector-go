@@ -4,8 +4,7 @@ os:
 sudo: false
 language: go
 go:
-  - 1.9.x
-  - 1.x
+  - 1.12
 git:
   depth: 1
 
