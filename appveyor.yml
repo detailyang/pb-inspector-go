@@ -20,7 +20,7 @@ install:
 
 build_script:
   - go test -race -v ./...
-  - go build -v -o bin/pb-inspector cmd/pb-inspector/*.go
+  - go build -v -o bin/pb-inspector cmd/pb-inspector/pb-inspector.go
 
 # to disable automatic tests
 test: true
