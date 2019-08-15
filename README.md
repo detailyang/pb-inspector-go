@@ -15,7 +15,7 @@
 # Install
 
 * from github:
-    > go get github.com/detailyang/protobuf-insepctor-go/cmd
+    > go get github.com/detailyang/protobuf-insepctor-go/cmd/pb-inspector
 
 * from source:
     > make build

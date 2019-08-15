@@ -51,7 +51,7 @@ lint-pb:
 .PHONY: build
 ## Build binary
 build:
-	go build -v -o bin/pb-inspector cmd/*.go
+	go build -v -o bin/pb-inspector cmd/pb-inspector/*.go
 
 .PHONY: test
 ## Testing everything
