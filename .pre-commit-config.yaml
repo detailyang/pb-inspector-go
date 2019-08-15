@@ -1,0 +1,16 @@
+---
+- repo: git://github.com/dnephin/pre-commit-golang
+  rev: master
+  hooks:
+      - id: go-fmt
+
+- repo: git://github.com/detailyang/pre-commit-shell
+  rev: v1.0.6
+  hooks:
+      - id: shell-lint
+        args: [--color=always, "--exclude=SC1090,SC1091,SC2206"]
+
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: v1.16.0
+  hooks:
+      - id: yamllint

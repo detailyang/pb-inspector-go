@@ -1,0 +1,2 @@
+go test: missing argument for flag bench
+run "go help test" or "go help testflag" for more information

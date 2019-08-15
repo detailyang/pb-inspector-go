@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package test.v1;
+
+option go_package = "testv1";
+option java_multiple_files = true;
+option java_outer_classname = "FooProto";
+option java_package = "com.test.v1";
+
+// Foo presents the foo.
+message Foo {
+  int32 int32 = 1;
+  int64 int64 = 2;
+  float float = 3;
+  double double = 4;
+  uint32 uint32 = 5;
+  uint64 uint64 = 6;
+  bool bool = 7;
+  bytes bytes = 8;
+  string string = 9;
+}
