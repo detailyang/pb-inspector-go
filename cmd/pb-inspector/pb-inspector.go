@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	inspector "github.com/detailyang/protobuf-insepctor-go/protobuf-inspector"
+	inspector "github.com/detailyang/pb-inspector-go/protobuf-inspector"
 	"github.com/k0kubun/pp"
 	"github.com/urfave/cli"
 )

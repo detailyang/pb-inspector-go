@@ -15,7 +15,7 @@ lint:
   file_header:
 generate:
   go_options:
-    import_path: github.com/detailyang/protobuf-insepctor-go/proto
+    import_path: github.com/detailyang/pb-inspector-go/proto
   plugins:
     - name: gogo
       type: gogo

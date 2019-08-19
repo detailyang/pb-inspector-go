@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	testv1 "github.com/detailyang/protobuf-insepctor-go/proto/go/proto/test/v1"
+	testv1 "github.com/detailyang/pb-inspector-go/proto/go/proto/test/v1"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/require"
 )
