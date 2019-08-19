@@ -12,15 +12,15 @@ import (
 )
 
 // Definition holds the protobuf definition
-type definition struct {
+type Definition struct {
 	messages          map[string]*pp.Message
 	enums             map[string]*pp.Enum
 	filenamesRead     []string
 	filenameToPackage map[string]string
 }
 
-func newDefinition() *definition {
-	return &definition{
+func NewDefinition() *Definition {
+	return &Definition{
 		messages:          map[string]*pp.Message{},
 		enums:             map[string]*pp.Enum{},
 		filenamesRead:     []string{},
@@ -29,7 +29,7 @@ func newDefinition() *definition {
 }
 
 // ReadFile reads the proto definition from a filename.
-func (d *definition) ReadFile(filename string) error {
+func (d *Definition) ReadFile(filename string) error {
 	fileReader, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (d *definition) ReadFile(filename string) error {
 }
 
 // ReadFrom reads from reader which named filename
-func (d *definition) ReadFrom(filename string, reader io.Reader) error {
+func (d *Definition) ReadFrom(filename string, reader io.Reader) error {
 	for _, each := range d.filenamesRead {
 		if each == filename {
 			return nil
@@ -70,13 +70,13 @@ func (d *definition) ReadFrom(filename string, reader io.Reader) error {
 }
 
 // Package returns the proto package name as declared in the proto filename.
-func (d *definition) Package(filename string) (pkg string, ok bool) {
+func (d *Definition) Package(filename string) (pkg string, ok bool) {
 	pkg, ok = d.filenameToPackage[filename]
 	return
 }
 
 // MessagesInPackage returns the messages
-func (d *definition) MessagesInPackage(pkg string) (list []*pp.Message) {
+func (d *Definition) MessagesInPackage(pkg string) (list []*pp.Message) {
 	for k, v := range d.messages {
 		if strings.HasPrefix(k, pkg+".") {
 			list = append(list, v)
@@ -86,27 +86,27 @@ func (d *definition) MessagesInPackage(pkg string) (list []*pp.Message) {
 }
 
 // Message returns the message
-func (d *definition) Message(pkg string, name string) (m *pp.Message, ok bool) {
+func (d *Definition) Message(pkg string, name string) (m *pp.Message, ok bool) {
 	key := fmt.Sprintf("%s.%s", pkg, name)
 	m, ok = d.messages[key]
 	return
 }
 
 // Enum returns the enum
-func (d *definition) Enum(pkg string, name string) (e *pp.Enum, ok bool) {
+func (d *Definition) Enum(pkg string, name string) (e *pp.Enum, ok bool) {
 	key := fmt.Sprintf("%s.%s", pkg, name)
 	e, ok = d.enums[key]
 	return
 }
 
 // AddEnum adds the Enum
-func (d *definition) AddEnum(pkg string, name string, enu *pp.Enum) {
+func (d *Definition) AddEnum(pkg string, name string, enu *pp.Enum) {
 	key := fmt.Sprintf("%s.%s", pkg, name)
 	d.enums[key] = enu
 }
 
 // AddMessage adds the message
-func (d *definition) AddMessage(pkg string, name string, message *pp.Message) {
+func (d *Definition) AddMessage(pkg string, name string, message *pp.Message) {
 	key := fmt.Sprintf("%s.%s", pkg, name)
 	d.messages[key] = message
 }

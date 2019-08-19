@@ -23,7 +23,7 @@ var ErrInternalBadWireType = errors.New("Buffer: bad wiretype for oneof")
 type Buffer struct {
 	buf     []byte // encode/decode byte stream
 	index   int    // read point
-	decoder *decoder
+	decoder *Decoder
 }
 
 // NewBuffer allocates a new Buffer and initializes its internal data to

@@ -6,14 +6,14 @@ import (
 
 // Inspector represents the protobuf inspector
 type Inspector struct {
-	decoder    *decoder
-	definition *definition
+	decoder    *Decoder
+	definition *Definition
 }
 
 // NewInspector returns the inspector to inpsect protobuf
 func NewInspector() *Inspector {
 	return &Inspector{
-		definition: newDefinition(),
+		definition: NewDefinition(),
 	}
 }
 
@@ -27,9 +27,14 @@ func (p *Inspector) ReadSchemaFromFile(f string) error {
 	return p.definition.ReadFile(f)
 }
 
-// ToMapWithSchema maps raw bytes to map[string]interface{}
+// ToMapWithSchema maps raw bytes to map[string]interface{} by self definition
 func (p *Inspector) ToMapWithSchema(pkg, name string, raw []byte) (map[string]interface{}, error) {
-	return newDecoder(p.definition, NewBuffer(raw)).Decode(pkg, name)
+	return NewDecoder(p.definition, NewBuffer(raw)).Decode(pkg, name)
+}
+
+// ToMapWithSchema maps raw bytes to map[string]interface{} by specified definition
+func (p *Inspector) ToMapWithSchemaByDefinition(d *Definition, pkg, name string, raw []byte) (map[string]interface{}, error) {
+    return NewDecoder(d, NewBuffer(raw)).Decode(pkg, name)
 }
 
 // InspectWithoutSchema inspects raw protobuf binary data and write to w

@@ -19,8 +19,8 @@ const (
 	mapField      = true
 )
 
-type decoder struct {
-	d       *definition
+type Decoder struct {
+	d       *Definition
 	m       *pp.Message
 	p       string
 	b       *Buffer
@@ -28,7 +28,7 @@ type decoder struct {
 	verbose bool
 }
 
-func (d *decoder) Decode(pkg, t string) (map[string]interface{}, error) {
+func (d *Decoder) Decode(pkg, t string) (map[string]interface{}, error) {
 	m, ok := d.d.Message(pkg, t)
 	if !ok {
 		return nil, fmt.Errorf("no definition found for package [%s] type [%s]", pkg, t)
@@ -49,15 +49,15 @@ func (d *decoder) Decode(pkg, t string) (map[string]interface{}, error) {
 	return d.r, nil
 }
 
-func newDecoder(d *definition, b *Buffer) *decoder {
-	return &decoder{
+func NewDecoder(d *Definition, b *Buffer) *Decoder {
+	return &Decoder{
 		d: d,
 		b: b,
 		r: map[string]interface{}{},
 	}
 }
 
-func (d *decoder) decodeTag(tag, wire uint64) error {
+func (d *Decoder) decodeTag(tag, wire uint64) error {
 	for _, each := range d.m.Elements {
 		if f, ok := each.(*pp.NormalField); ok {
 			if f.Sequence == int(tag) {
@@ -78,7 +78,7 @@ func (d *decoder) decodeTag(tag, wire uint64) error {
 	return nil
 }
 
-func (d *decoder) decodeNormalField(f *pp.NormalField, wire uint64) error {
+func (d *Decoder) decodeNormalField(f *pp.NormalField, wire uint64) error {
 	if "string" == f.Type {
 		return d.handleString(f.Name, f.Repeated)
 	}
@@ -115,7 +115,7 @@ func (d *decoder) decodeNormalField(f *pp.NormalField, wire uint64) error {
 	return fmt.Errorf("unknown type:%s", f.Type)
 }
 
-func (d *decoder) decodeNormalFieldEnum(f *pp.NormalField, e *pp.Enum) error {
+func (d *Decoder) decodeNormalFieldEnum(f *pp.NormalField, e *pp.Enum) error {
 	x, err := d.b.DecodeVarint()
 	if err != nil {
 		return err
@@ -131,7 +131,7 @@ func (d *decoder) decodeNormalFieldEnum(f *pp.NormalField, e *pp.Enum) error {
 	return fmt.Errorf("unknown enum field value:%d", x)
 }
 
-func (d *decoder) decodeNormalFieldMessage(f *pp.NormalField) error {
+func (d *Decoder) decodeNormalFieldMessage(f *pp.NormalField) error {
 	nextData, err := d.b.DecodeRawBytes(true)
 	if err != nil {
 		if io.ErrUnexpectedEOF == err {
@@ -139,7 +139,7 @@ func (d *decoder) decodeNormalFieldMessage(f *pp.NormalField) error {
 		}
 		return fmt.Errorf("unable or read raw bytes of message of type:%s", f.Type)
 	}
-	sub := newDecoder(d.d, NewBuffer(nextData))
+	sub := NewDecoder(d.d, NewBuffer(nextData))
 	if f.Repeated {
 		for {
 			if d.verbose {
@@ -183,7 +183,7 @@ func (d *decoder) decodeNormalFieldMessage(f *pp.NormalField) error {
 	return nil
 }
 
-func (d *decoder) add(key string, value interface{}, repeated bool, isMap bool) {
+func (d *Decoder) add(key string, value interface{}, repeated bool, isMap bool) {
 	if d.verbose {
 		log.Printf("[%s] add [%s=%v] repeated:%v map:%v\n", d.m.Name, key, value, repeated, isMap)
 	}
@@ -219,14 +219,14 @@ func (d *decoder) add(key string, value interface{}, repeated bool, isMap bool) 
 	}
 }
 
-func (d *decoder) decodeOneOfField(f *pp.OneOfField, wire uint64) error {
+func (d *Decoder) decodeOneOfField(f *pp.OneOfField, wire uint64) error {
 	// TODO
 	log.Println("WARN:unhandled oneof field")
 	return nil
 }
 
 // https://developers.google.com/protocol-buffers/docs/proto3#maps
-func (d *decoder) decodeMapField(f *pp.MapField, wire uint64) error {
+func (d *Decoder) decodeMapField(f *pp.MapField, wire uint64) error {
 	// create temporary proto Message such that we can use another decoder to do all the work
 	entryMessageName := d.m.Name + "." + f.Name + ".Entry"
 	if _, ok := d.d.Message(d.p, entryMessageName); !ok {
@@ -254,7 +254,7 @@ func (d *decoder) decodeMapField(f *pp.MapField, wire uint64) error {
 		}
 		return fmt.Errorf("unable to read raw bytes of map of type:%s", f.Type)
 	}
-	sub := newDecoder(d.d, NewBuffer(nextData))
+	sub := NewDecoder(d.d, NewBuffer(nextData))
 	result, err := sub.Decode(d.p, entryMessageName)
 	if err != nil && err != ErrEndOfMessage {
 		return fmt.Errorf("unable to decode map of type:%s->%s err:%v", f.KeyType, f.Type, err)
@@ -275,7 +275,7 @@ func (d *decoder) decodeMapField(f *pp.MapField, wire uint64) error {
 	return nil
 }
 
-func (d *decoder) handleInt64(n string, repeated bool) error {
+func (d *Decoder) handleInt64(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -303,7 +303,7 @@ func (d *decoder) handleInt64(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleUint32(n string, repeated bool) error {
+func (d *Decoder) handleUint32(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -331,7 +331,7 @@ func (d *decoder) handleUint32(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleUint64(n string, repeated bool) error {
+func (d *Decoder) handleUint64(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -359,7 +359,7 @@ func (d *decoder) handleUint64(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleInt32(n string, repeated bool) error {
+func (d *Decoder) handleInt32(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -387,7 +387,7 @@ func (d *decoder) handleInt32(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleFloat(n string, repeated bool) error {
+func (d *Decoder) handleFloat(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -415,7 +415,7 @@ func (d *decoder) handleFloat(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleDouble(n string, repeated bool) error {
+func (d *Decoder) handleDouble(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -443,7 +443,7 @@ func (d *decoder) handleDouble(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleString(n string, repeated bool) error {
+func (d *Decoder) handleString(n string, repeated bool) error {
 	// non-repeated and repeated
 	sb, err := d.b.DecodeStringBytes()
 	if err != nil {
@@ -456,7 +456,7 @@ func (d *decoder) handleString(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleBytes(n string, repeated bool) error {
+func (d *Decoder) handleBytes(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
@@ -484,7 +484,7 @@ func (d *decoder) handleBytes(n string, repeated bool) error {
 	return nil
 }
 
-func (d *decoder) handleBool(n string, repeated bool) error {
+func (d *Decoder) handleBool(n string, repeated bool) error {
 	if repeated {
 		data, err := d.b.DecodeRawBytes(true)
 		if err != nil {
