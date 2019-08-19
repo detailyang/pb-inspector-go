@@ -345,7 +345,7 @@ out:
 					for i := 0; i < 3; i++ {
 						fmt.Fprintf(w, " %.2x", r[i])
 					}
-					fmt.Printf(" ..")
+					fmt.Fprintf(w, " ..")
 					for i := len(r) - 3; i < len(r); i++ {
 						fmt.Fprintf(w, " %.2x", r[i])
 					}

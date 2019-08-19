@@ -39,7 +39,7 @@ func TestInspectWithoutSchema(t *testing.T) {
 	o += " 20: t=  6 varint 6" + "\n"
 	o += " 22: t=  7 varint 1" + "\n"
 	o += " 24: t=  8 bytes [4] 68 61 68 61" + "\n"
-	o += " 30: t=  9 bytes [11] 68 65 6c 72 6c 64" + "\n"
+	o += " 30: t=  9 bytes [11] 68 65 6c .. 72 6c 64" + "\n"
 
 	require.Equal(t, o, w.String())
 }
